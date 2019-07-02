@@ -6,9 +6,9 @@ services:
     image: mongo:4.0.10
     volumes:
       - ./deployment/mongo/mongod.conf:/etc/mongod.conf
-      - ./volumes/mongodb-slave-1/var/lib/mongodb:/var/lib/mongodb
-      - ./volumes/mongodb-slave-1/var/log/mongodb:/var/log/
-      - ./volumes/mongodb-slave-1/data/db/:/data/db/
+      - ./volumes/mongodb-replica-1/var/lib/mongodb:/var/lib/mongodb
+      - ./volumes/mongodb-replica-1/var/log/mongodb:/var/log/
+      - ./volumes/mongodb-replica-1/data/db/:/data/db/
     ports:
       - 27117:27017
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
@@ -17,9 +17,9 @@ services:
     image: mongo:4.0.10
     volumes:
       - ./deployment/mongo/mongod.conf:/etc/mongod.conf
-      - ./volumes/mongodb-slave-2/var/lib/mongodb:/var/lib/mongodb
-      - ./volumes/mongodb-slave-2/var/log/mongodb:/var/log/
-      - ./volumes/mongodb-slave-2/data/db/:/data/db/
+      - ./volumes/mongodb-replica-2/var/lib/mongodb:/var/lib/mongodb
+      - ./volumes/mongodb-replica-2/var/log/mongodb:/var/log/
+      - ./volumes/mongodb-replica-2/data/db/:/data/db/
     ports:
       - 27217:27017
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
@@ -28,14 +28,14 @@ services:
     image: mongo:4.0.10
     volumes:
       - ./deployment/mongo/mongod.conf:/etc/mongod.conf
-      - ./volumes/mongodb-slave-3/var/lib/mongodb:/var/lib/mongodb
-      - ./volumes/mongodb-slave-3/var/log/mongodb:/var/log/
-      - ./volumes/mongodb-slave-3/data/db/:/data/db/
+      - ./volumes/mongodb-replica-3/var/lib/mongodb:/var/lib/mongodb
+      - ./volumes/mongodb-replica-3/var/log/mongodb:/var/log/
+      - ./volumes/mongodb-replica-3/data/db/:/data/db/
     ports:
       - 27317:27017
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
 
-  rockmongo-slave-1:
+  rockmongo:
     image: weshigbee/rockmongo
     environment:
       MONGO_SERVER: mongodb-replica-1
@@ -43,21 +43,3 @@ services:
       - 8010:80
     depends_on:
       - mongodb-replica-1
-
-  rockmongo-slave-2:
-    image: weshigbee/rockmongo
-    environment:
-      MONGO_SERVER: mongodb-replica-2
-    ports:
-      - 8020:80
-    depends_on:
-      - mongodb-replica-2
-
-  rockmongo-slave-3:
-    image: weshigbee/rockmongo
-    environment:
-      MONGO_SERVER: mongodb-replica-3
-    ports:
-      - 8030:80
-    depends_on:
-      - mongodb-replica-3
