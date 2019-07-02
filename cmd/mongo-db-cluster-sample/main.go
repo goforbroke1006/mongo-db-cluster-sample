@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
 
@@ -17,7 +18,13 @@ type ExchangeRate struct {
 }
 
 func main() {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://127.0.0.1:27017/sample"))
+	client, err := mongo.NewClient(
+		options.Client().ApplyURI(
+			//"mongodb://localhost:27117/?replicaSet=TestMongoReplicaSet&connect=direct",
+			"mongodb://localhost:27117,localhost:27217,localhost:27317/?replicaSet=TestMongoReplicaSet&connect=direct",
+		),
+		options.Client().SetConnectTimeout(5*time.Second),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,10 +45,26 @@ func main() {
 	fmt.Println("Connected to MongoDB!")
 
 	collection := client.Database("sample").Collection("exchangerate")
-	insert, err := collection.InsertOne(context.TODO(), &ExchangeRate{UpdatedAt: time.Now(), From: "gold", To: "bitcoin"})
+	//insert, err := collection.InsertOne(context.TODO(), &ExchangeRate{UpdatedAt: time.Now(), From: "gold", To: "bitcoin"})
+	//if nil != err {
+	//	log.Fatalf("Insert error: %v", err)
+	//}
+	//log.Printf("Insert: %v", insert)
+
+	options := options.Find()
+	options.SetLimit(100)
+
+	var rates []ExchangeRate
+	cursor, err := collection.Find(context.TODO(), bson.M{}, options)
 	if nil != err {
-		log.Fatal(err)
+		log.Fatalf("Select error: %v", err)
+	}
+	err = cursor.All(context.TODO(), &rates)
+	if nil != err {
+		log.Fatalf("Fetch error: %v", err)
 	}
 
-	log.Printf("Insert: %v", insert)
+	for _, r := range rates {
+		log.Printf("%v", r)
+	}
 }
