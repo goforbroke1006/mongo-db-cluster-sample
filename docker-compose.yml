@@ -2,13 +2,13 @@ version: '3'
 
 services:
 
-  mongodb-arbitrator:
+  mongodb-arbiter:
     image: mongo:4.0.10
     volumes:
       - ./deployment/mongo/mongod.conf:/etc/mongod.conf
-      - ./volumes/mongodb-artitrator/var/lib/mongodb:/var/lib/mongodb
-      - ./volumes/mongodb-artitrator/var/log/mongodb:/var/log/
-      - ./volumes/mongodb-artitrator/data/db/:/data/db/
+      - ./volumes/mongodb-arbiter/var/lib/mongodb:/var/lib/mongodb
+      - ./volumes/mongodb-arbiter/var/log/mongodb:/var/log/
+      - ./volumes/mongodb-arbiter/data/db/:/data/db/
     ports:
       - 27017:27017
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]

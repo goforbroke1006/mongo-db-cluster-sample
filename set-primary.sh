@@ -8,7 +8,7 @@ docker-compose exec mongodb-replica-1 mongo --eval \
 rs.initiate({"_id" : "TestMongoReplicaSet", members : [
     {"_id" : 0, priority : 3, host : "mongodb-replica-1:27017"},
     {"_id" : 1, host : "mongodb-replica-2:27017"},
-    {"_id" : 2, host : "mongodb-arbitrator:27017", arbiterOnly : true}
+    {"_id" : 2, host : "mongodb-arbiter:27017", arbiterOnly : true}
 ]});
 '
 
@@ -17,4 +17,4 @@ rs.initiate({"_id" : "TestMongoReplicaSet", members : [
 
 
 # rs.remove("mongodb-artitrator:27017")
-# rs.addArb("mongodb-arbitrator:27017") 
+# rs.addArb("mongodb-arbiter:27017")
