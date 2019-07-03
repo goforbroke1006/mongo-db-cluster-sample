@@ -2,6 +2,17 @@ version: '3'
 
 services:
 
+  mongodb-arbiter:
+    image: mongo:4.0.10
+    volumes:
+      - ./deployment/mongo/mongod.conf:/etc/mongod.conf
+      - ./volumes/mongodb-arbiter/var/lib/mongodb:/var/lib/mongodb
+      - ./volumes/mongodb-arbiter/var/log/mongodb:/var/log/
+      - ./volumes/mongodb-arbiter/data/db/:/data/db/
+    ports:
+      - 27017:27017
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
+
   mongodb-replica-1:
     image: mongo:4.0.10
     volumes:
@@ -22,17 +33,6 @@ services:
       - ./volumes/mongodb-replica-2/data/db/:/data/db/
     ports:
       - 27217:27017
-    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
-
-  mongodb-replica-3:
-    image: mongo:4.0.10
-    volumes:
-      - ./deployment/mongo/mongod.conf:/etc/mongod.conf
-      - ./volumes/mongodb-replica-3/var/lib/mongodb:/var/lib/mongodb
-      - ./volumes/mongodb-replica-3/var/log/mongodb:/var/log/
-      - ./volumes/mongodb-replica-3/data/db/:/data/db/
-    ports:
-      - 27317:27017
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "TestMongoReplicaSet" ]
 
   rockmongo:
