@@ -21,7 +21,7 @@ type ExchangeRate struct {
 func main() {
 	client, err := mongo.NewClient(
 		options.Client().ApplyURI(
-			"mongodb://localhost:27117/?replicaSet=TestMongoReplicaSet&connect=direct&readPreference=secondary",
+			"mongodb://localhost:27117,localhost:27217/?replicaSet=TestMongoReplicaSet&connect=direct&readPreference=secondary",
 		),
 		options.Client().SetConnectTimeout(5*time.Second),
 	)
